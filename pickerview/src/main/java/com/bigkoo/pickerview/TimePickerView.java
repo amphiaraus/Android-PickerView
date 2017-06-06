@@ -7,7 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,14 +32,12 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
     private CustomListener customListener;
 
     WheelTime wheelTime; //自定义控件
-    private Button btnSubmit, btnCancel; //确定、取消按钮
+    private ImageButton btnSubmit, btnCancel; //确定、取消按钮
     private TextView tvTitle;//标题
     private OnTimeSelectListener timeSelectListener;//回调接口
     private int gravity = Gravity.CENTER;//内容显示位置 默认居中
     private boolean[] type;// 显示类型
 
-    private String Str_Submit;//确定按钮字符串
-    private String Str_Cancel;//取消按钮字符串
     private String Str_Title;//标题字符串
 
     private int Color_Submit;//确定按钮颜色
@@ -84,8 +82,6 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         this.timeSelectListener = builder.timeSelectListener;
         this.gravity = builder.gravity;
         this.type = builder.type;
-        this.Str_Submit = builder.Str_Submit;
-        this.Str_Cancel = builder.Str_Cancel;
         this.Str_Title = builder.Str_Title;
         this.Color_Submit = builder.Color_Submit;
         this.Color_Cancel = builder.Color_Cancel;
@@ -137,8 +133,6 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         private boolean[] type = new boolean[]{true, true, true, true, true, true};//显示类型 默认全部显示
         private int gravity = Gravity.CENTER;//内容显示位置 默认居中
 
-        private String Str_Submit;//确定按钮文字
-        private String Str_Cancel;//取消按钮文字
         private String Str_Title;//标题文字
 
         private int Color_Submit;//确定按钮颜色
@@ -192,11 +186,6 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             return this;
         }
 
-        public Builder setSubmitText(String Str_Submit) {
-            this.Str_Submit = Str_Submit;
-            return this;
-        }
-
         public Builder isDialog(boolean isDialog) {
             this.isDialog = isDialog;
             return this;
@@ -204,11 +193,6 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
 
         public Builder dialogCreator(DialogCreator creator) {
             this.dialogCreator = creator;
-            return this;
-        }
-
-        public Builder setCancelText(String Str_Cancel) {
-            this.Str_Cancel = Str_Cancel;
             return this;
         }
 
@@ -411,8 +395,8 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             tvTitle = (TextView) findViewById(R.id.tvTitle);
 
             //确定和取消按钮
-            btnSubmit = (Button) findViewById(R.id.btnSubmit);
-            btnCancel = (Button) findViewById(R.id.btnCancel);
+            btnSubmit = (ImageButton) findViewById(R.id.btnSubmit);
+            btnCancel = (ImageButton) findViewById(R.id.btnCancel);
 
             btnSubmit.setTag(TAG_SUBMIT);
             btnCancel.setTag(TAG_CANCEL);
@@ -421,18 +405,11 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             btnCancel.setOnClickListener(this);
 
             //设置文字
-            btnSubmit.setText(TextUtils.isEmpty(Str_Submit) ? context.getResources().getString(R.string.pickerview_submit) : Str_Submit);
-            btnCancel.setText(TextUtils.isEmpty(Str_Cancel) ? context.getResources().getString(R.string.pickerview_cancel) : Str_Cancel);
             tvTitle.setText(TextUtils.isEmpty(Str_Title) ? "" : Str_Title);//默认为空
 
-            //设置文字颜色
-            btnSubmit.setTextColor(Color_Submit == 0 ? pickerview_timebtn_nor : Color_Submit);
-            btnCancel.setTextColor(Color_Cancel == 0 ? pickerview_timebtn_nor : Color_Cancel);
             tvTitle.setTextColor(Color_Title == 0 ? pickerview_topbar_title : Color_Title);
 
             //设置文字大小
-            btnSubmit.setTextSize(Size_Submit_Cancel);
-            btnCancel.setTextSize(Size_Submit_Cancel);
             tvTitle.setTextSize(Size_Title);
             RelativeLayout rv_top_bar = (RelativeLayout) findViewById(R.id.rv_topbar);
             rv_top_bar.setBackgroundColor(Color_Background_Title == 0 ? pickerview_bg_topbar : Color_Background_Title);

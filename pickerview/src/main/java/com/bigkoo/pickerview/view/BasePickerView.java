@@ -75,8 +75,8 @@ public class BasePickerView {
             //这个是真正要加载时间选取器的父布局
             contentContainer = (ViewGroup) dialogView.findViewById(R.id.content_container);
             //设置对话框 左右间距屏幕30
-            this.params.leftMargin = 30;
-            this.params.rightMargin = 30;
+            /*this.params.leftMargin = 30;
+            this.params.rightMargin = 30;*/
             contentContainer.setLayoutParams(this.params);
             //创建对话框
             createDialog();

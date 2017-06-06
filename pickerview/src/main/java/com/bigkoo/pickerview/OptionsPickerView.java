@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +29,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
     WheelOptions<T> wheelOptions;
     private int layoutRes;
     private CustomListener customListener;
-    private Button btnSubmit, btnCancel; //确定、取消按钮
+    private ImageButton btnSubmit, btnCancel; //确定、取消按钮
     private TextView tvTitle;
     private RelativeLayout rv_top_bar;
 
@@ -38,8 +38,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     private OnOptionsSelectListener optionsSelectListener;
 
-    private String Str_Submit;//确定按钮文字
-    private String Str_Cancel;//取消按钮文字
     private String Str_Title;//标题文字
 
     private int Color_Submit;//确定按钮颜色
@@ -86,8 +84,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
     public OptionsPickerView(Builder builder) {
         super(builder.context);
         this.optionsSelectListener = builder.optionsSelectListener;
-        this.Str_Submit = builder.Str_Submit;
-        this.Str_Cancel = builder.Str_Cancel;
         this.Str_Title = builder.Str_Title;
 
         this.Color_Submit = builder.Color_Submit;
@@ -145,8 +141,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
         private DialogCreator dialogCreator = DialogCreator.DEFAULT;
 
-        private String Str_Submit;//确定按钮文字
-        private String Str_Cancel;//取消按钮文字
         private String Str_Title;//标题文字
 
         private int Color_Submit;//确定按钮颜色
@@ -193,18 +187,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         public Builder(Context context, OnOptionsSelectListener listener) {
             this.context = context;
             this.optionsSelectListener = listener;
-        }
-
-        //Option
-
-        public Builder setSubmitText(String Str_Cancel) {
-            this.Str_Submit = Str_Cancel;
-            return this;
-        }
-
-        public Builder setCancelText(String Str_Cancel) {
-            this.Str_Cancel = Str_Cancel;
-            return this;
         }
 
         public Builder setTitleText(String Str_Title) {
@@ -419,8 +401,8 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             rv_top_bar = (RelativeLayout) findViewById(R.id.rv_topbar);
 
             //确定和取消按钮
-            btnSubmit = (Button) findViewById(R.id.btnSubmit);
-            btnCancel = (Button) findViewById(R.id.btnCancel);
+            btnSubmit = (ImageButton) findViewById(R.id.btnSubmit);
+            btnCancel = (ImageButton) findViewById(R.id.btnCancel);
 
             btnSubmit.setTag(TAG_SUBMIT);
             btnCancel.setTag(TAG_CANCEL);
@@ -428,19 +410,13 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             btnCancel.setOnClickListener(this);
 
             //设置文字
-            btnSubmit.setText(TextUtils.isEmpty(Str_Submit) ? context.getResources().getString(R.string.pickerview_submit) : Str_Submit);
-            btnCancel.setText(TextUtils.isEmpty(Str_Cancel) ? context.getResources().getString(R.string.pickerview_cancel) : Str_Cancel);
             tvTitle.setText(TextUtils.isEmpty(Str_Title) ? "" : Str_Title);//默认为空
 
             //设置color
-            btnSubmit.setTextColor(Color_Submit == 0 ? pickerview_timebtn_nor : Color_Submit);
-            btnCancel.setTextColor(Color_Cancel == 0 ? pickerview_timebtn_nor : Color_Cancel);
             tvTitle.setTextColor(Color_Title == 0 ? pickerview_topbar_title : Color_Title);
             rv_top_bar.setBackgroundColor(Color_Background_Title == 0 ? pickerview_bg_topbar : Color_Background_Title);
 
             //设置文字大小
-            btnSubmit.setTextSize(Size_Submit_Cancel);
-            btnCancel.setTextSize(Size_Submit_Cancel);
             tvTitle.setTextSize(Size_Title);
             tvTitle.setText(Str_Title);
         } else {
@@ -451,7 +427,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         final LinearLayout optionsPicker = (LinearLayout) findViewById(R.id.optionspicker);
         optionsPicker.setBackgroundColor(Color_Background_Wheel == 0 ? bgColor_default : Color_Background_Wheel);
 
-        wheelOptions = new WheelOptions(optionsPicker, linkage);
+        wheelOptions = new WheelOptions<>(optionsPicker, linkage);
         wheelOptions.setTextContentSize(Size_Content);
         wheelOptions.setLabels(label1, label2, label3);
         wheelOptions.setCyclic(cyclic1, cyclic2, cyclic3);
