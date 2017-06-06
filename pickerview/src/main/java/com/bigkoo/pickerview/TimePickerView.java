@@ -1,5 +1,6 @@
 package com.bigkoo.pickerview;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.bigkoo.pickerview.lib.WheelView;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.style.DialogCreator;
 import com.bigkoo.pickerview.view.BasePickerView;
 import com.bigkoo.pickerview.view.WheelTime;
 
@@ -69,6 +71,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
     // 条目间距倍数 默认1.6
     private float lineSpacingMultiplier = 1.6F;
     private boolean isDialog;//是否是对话框模式
+    private DialogCreator dialogCreator;
     private String label_year, label_month, label_day, label_hours, label_mins, label_seconds;
     private WheelView.DividerType dividerType;//分隔线类型
 
@@ -113,12 +116,16 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         this.layoutRes = builder.layoutRes;
         this.lineSpacingMultiplier = builder.lineSpacingMultiplier;
         this.isDialog = builder.isDialog;
+        this.dialogCreator = builder.dialogCreator;
         this.dividerType = builder.dividerType;
         this.backgroundId = builder.backgroundId;
         this.decorView = builder.decorView;
         initView(builder.context);
     }
 
+    @Override protected Dialog onCreateDialog(Context context, int style) {
+        return dialogCreator.create(context, style);
+    }
 
     //建造器
     public static class Builder {
@@ -126,6 +133,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         private CustomListener customListener;
         private Context context;
         private OnTimeSelectListener timeSelectListener;
+        private DialogCreator dialogCreator = DialogCreator.DEFAULT;
         private boolean[] type = new boolean[]{true, true, true, true, true, true};//显示类型 默认全部显示
         private int gravity = Gravity.CENTER;//内容显示位置 默认居中
 
@@ -152,8 +160,8 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
         private boolean cyclic = false;//是否循环
         private boolean cancelable = true;//是否能取消
 
-        private boolean isCenterLabel = true ;//是否只显示中间的label
-        public ViewGroup decorView ;//显示pickerview的根View,默认是activity的根view
+        private boolean isCenterLabel = true;//是否只显示中间的label
+        public ViewGroup decorView;//显示pickerview的根View,默认是activity的根view
 
         private int textColorOut; //分割线以外的文字颜色
         private int textColorCenter; //分割线之间的文字颜色
@@ -194,6 +202,11 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             return this;
         }
 
+        public Builder dialogCreator(DialogCreator creator) {
+            this.dialogCreator = creator;
+            return this;
+        }
+
         public Builder setCancelText(String Str_Cancel) {
             this.Str_Cancel = Str_Cancel;
             return this;
@@ -213,9 +226,11 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             this.Color_Cancel = Color_Cancel;
             return this;
         }
+
         /**
          * 必须是viewgroup
          * 设置要将pickerview显示到的容器id
+         *
          * @param decorView
          * @return
          */
@@ -323,6 +338,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
 
         /**
          * //显示时的外部背景色颜色,默认是灰色
+         *
          * @param backgroundId
          */
 

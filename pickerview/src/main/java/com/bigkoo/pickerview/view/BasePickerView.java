@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 
 import com.bigkoo.pickerview.R;
 import com.bigkoo.pickerview.listener.OnDismissListener;
+import com.bigkoo.pickerview.style.DialogCreator;
 import com.bigkoo.pickerview.utils.PickerViewAnimateUtil;
 
 /**
@@ -55,6 +56,7 @@ public class BasePickerView {
     protected View clickView;//是通过哪个View弹出的
 
     private boolean isAnim = true;
+
     public BasePickerView(Context context) {
         this.context = context;
 
@@ -115,10 +117,13 @@ public class BasePickerView {
     protected void initEvents() {
     }
 
+    protected Dialog onCreateDialog(Context context,int style){
+        return DialogCreator.DEFAULT.create(context,style);
+    }
 
     /**
-     * @param v (是通过哪个View弹出的)
-     * @param isAnim  是否显示动画效果
+     * @param v      (是通过哪个View弹出的)
+     * @param isAnim 是否显示动画效果
      */
     public void show(View v, boolean isAnim) {
         this.clickView = v;
@@ -161,7 +166,7 @@ public class BasePickerView {
      */
     private void onAttached(View view) {
         decorView.addView(view);
-        if(isAnim){
+        if (isAnim) {
             contentContainer.startAnimation(inAnim);
         }
     }
@@ -189,7 +194,7 @@ public class BasePickerView {
                 return;
             }
 
-            if (isAnim){
+            if (isAnim) {
                 //消失动画
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -323,11 +328,11 @@ public class BasePickerView {
 
     public void createDialog() {
         if (dialogView != null) {
-            mDialog = new Dialog(context, R.style.custom_dialog2);
+            mDialog = onCreateDialog(context, R.style.custom_dialog2);
             mDialog.setCancelable(cancelable);//不能点外面取消,也不 能点back取消
             mDialog.setContentView(dialogView);
-
-            mDialog.getWindow().setWindowAnimations(R.style.pickerview_dialogAnim);
+            // 迁移到 R.style.custom_dialog2 样式中
+            // mDialog.getWindow().setWindowAnimations(R.style.pickerview_dialogAnim);
             mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {

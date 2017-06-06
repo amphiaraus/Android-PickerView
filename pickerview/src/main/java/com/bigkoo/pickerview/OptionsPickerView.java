@@ -1,5 +1,6 @@
 package com.bigkoo.pickerview;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.bigkoo.pickerview.lib.WheelView;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.style.DialogCreator;
 import com.bigkoo.pickerview.view.BasePickerView;
 import com.bigkoo.pickerview.view.WheelOptions;
 
@@ -58,11 +60,12 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
     // 条目间距倍数 默认1.6
     private float lineSpacingMultiplier = 1.6F;
     private boolean isDialog;//是否是对话框模式
+    private DialogCreator dialogCreator;
 
     private boolean cancelable;//是否能取消
     private boolean linkage;//是否联动
 
-    private boolean isCenterLabel ;//是否只显示中间的label
+    private boolean isCenterLabel;//是否只显示中间的label
 
     private String label1;//单位
     private String label2;
@@ -122,12 +125,16 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         this.customListener = builder.customListener;
         this.layoutRes = builder.layoutRes;
         this.isDialog = builder.isDialog;
+        this.dialogCreator = builder.dialogCreator;
         this.dividerType = builder.dividerType;
         this.backgroundId = builder.backgroundId;
         this.decorView = builder.decorView;
         initView(builder.context);
     }
 
+    @Override protected Dialog onCreateDialog(Context context, int style) {
+        return dialogCreator.create(context, style);
+    }
 
     //建造器
     public static class Builder {
@@ -135,6 +142,8 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         private CustomListener customListener;
         private Context context;
         private OnOptionsSelectListener optionsSelectListener;
+
+        private DialogCreator dialogCreator = DialogCreator.DEFAULT;
 
         private String Str_Submit;//确定按钮文字
         private String Str_Cancel;//取消按钮文字
@@ -159,7 +168,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         private int textColorCenter; //分割线之间的文字颜色
         private int dividerColor; //分割线的颜色
         private int backgroundId; //显示时的外部背景色颜色,默认是灰色
-        public ViewGroup decorView ;//显示pickerview的根View,默认是activity的根view
+        public ViewGroup decorView;//显示pickerview的根View,默认是activity的根view
         // 条目间距倍数 默认1.6
         private float lineSpacingMultiplier = 1.6F;
         private boolean isDialog;//是否是对话框模式
@@ -208,6 +217,11 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             return this;
         }
 
+        public Builder dialogCreator(DialogCreator creator) {
+            this.dialogCreator = creator;
+            return this;
+        }
+
         public Builder setSubmitColor(int Color_Submit) {
             this.Color_Submit = Color_Submit;
             return this;
@@ -220,6 +234,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
         /**
          * 显示时的外部背景色颜色,默认是灰色
+         *
          * @param backgroundId
          * @return
          */
@@ -227,9 +242,11 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             this.backgroundId = backgroundId;
             return this;
         }
+
         /**
          * 必须是viewgroup
          * 设置要将pickerview显示到的容器
+         *
          * @param decorView
          * @return
          */
@@ -237,8 +254,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
             this.decorView = decorView;
             return this;
         }
-
-
 
 
         public Builder setLayoutRes(int res, CustomListener listener) {
@@ -286,7 +301,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         /**
          * 此方法已废弃
          * 不联动的情况下，请调用 setNPicker 方法。
-         * */
+         */
         @Deprecated
         public Builder setLinkage(boolean linkage) {
             this.linkage = linkage;
@@ -401,7 +416,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
             //顶部标题
             tvTitle = (TextView) findViewById(R.id.tvTitle);
-            rv_top_bar = (RelativeLayout)findViewById(R.id.rv_topbar);
+            rv_top_bar = (RelativeLayout) findViewById(R.id.rv_topbar);
 
             //确定和取消按钮
             btnSubmit = (Button) findViewById(R.id.btnSubmit);
@@ -444,7 +459,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
         setOutSideCancelable(cancelable);
 
-        if (tvTitle!= null){
+        if (tvTitle != null) {
             tvTitle.setText(Str_Title);
         }
 
@@ -483,7 +498,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
     }
 
     private void SetCurrentItems() {
-        if(wheelOptions!=null){
+        if (wheelOptions != null) {
             wheelOptions.setCurrentItems(option1, option2, option3);
         }
     }
